@@ -30,7 +30,7 @@
             100% { background-position: 0% 50%; }
         }
 
-        。container {
+        .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
@@ -204,6 +204,65 @@
             text-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
 
+        .countdown-display {
+            font-size: 2.2rem;
+            font-weight: 900;
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            animation: pulse 2s ease-in-out infinite;
+            letter-spacing: 2px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+            }
+            50% { 
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+            }
+        }
+
+        .countdown-display.warning {
+            background: rgba(255, 165, 0, 0.2);
+            border-color: #ffa500;
+            animation: pulse-warning 1s ease-in-out infinite;
+        }
+
+        .countdown-display.danger {
+            background: rgba(255, 107, 107, 0.2);
+            border-color: #ff6b6b;
+            animation: pulse-danger 0.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-warning {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 165, 0, 0.4);
+            }
+            50% { 
+                transform: scale(1.08);
+                box-shadow: 0 0 0 8px rgba(255, 165, 0, 0);
+            }
+        }
+
+        @keyframes pulse-danger {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.4);
+            }
+            50% { 
+                transform: scale(1.1);
+                box-shadow: 0 0 0 6px rgba(255, 107, 107, 0);
+            }
+        }
+
         .winners-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -346,6 +405,136 @@
             font-weight: 500;
         }
 
+        .wallet-connect-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 1000;
+        }
+
+        .wallet-connect-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .wallet-connect-btn:active {
+            transform: translateY(0);
+        }
+
+        .wallet-connect-btn.connected {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+        }
+
+        .wallet-address {
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .wallet-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .wallet-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .wallet-modal.active {
+            display: flex;
+        }
+
+        .wallet-modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .wallet-modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .wallet-info {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .wallet-info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+
+        .wallet-info-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .wallet-info-value {
+            color: #2d3748;
+            font-weight: 600;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+        }
+
+        .wallet-close-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .wallet-close-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .wallet-connect-btn {
+                top: 10px;
+                right: 10px;
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
+        }
+
         .loading {
             text-align: center;
             color: #718096;
@@ -408,6 +597,12 @@
                 font-size: 1.6rem;
                 margin-bottom: 20px;
             }
+            
+            .countdown-display {
+                font-size: 1.8rem;
+                padding: 12px;
+                margin: 12px 0;
+            }
         }
 
         @media (max-width: 480px) {
@@ -424,22 +619,63 @@
                 font-size: 1.8rem;
             }
             
-            。subtitle {
+            .subtitle {
                 font-size: 1rem;
             }
             
-            。card {
+            .card {
                 padding: 20px;
                 min-height: 220px;
             }
             
-            。winners-section, .description {
+            .winners-section, .description {
                 padding: 20px;
+            }
+            
+            .countdown-display {
+                font-size: 1.5rem;
+                padding: 10px;
+                margin: 10px 0;
             }
         }
     </style>
 </head>
 <body>
+    <!-- 钱包连接按钮 -->
+    <button id="wallet-connect-btn" class="wallet-connect-btn">
+        <svg class="wallet-icon" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"/>
+            <path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"/>
+        </svg>
+        <span id="wallet-btn-text">连接钱包</span>
+    </button>
+
+    <!-- 钱包信息模态框 -->
+    <div id="wallet-modal" class="wallet-modal">
+        <div class="wallet-modal-content">
+            <h3 class="wallet-modal-title">💼 钱包信息</h3>
+            <div class="wallet-info">
+                <div class="wallet-info-row">
+                    <span class="wallet-info-label">钱包地址:</span>
+                    <span class="wallet-info-value" id="modal-wallet-address">-</span>
+                </div>
+                <div class="wallet-info-row">
+                    <span class="wallet-info-label">网络:</span>
+                    <span class="wallet-info-value" id="modal-network">-</span>
+                </div>
+                <div class="wallet-info-row">
+                    <span class="wallet-info-label">BNB 余额:</span>
+                    <span class="wallet-info-value" id="modal-bnb-balance">-</span>
+                </div>
+                <div class="wallet-info-row">
+                    <span class="wallet-info-label">大富翁余额:</span>
+                    <span class="wallet-info-value" id="modal-token-balance">-</span>
+                </div>
+            </div>
+            <button class="wallet-close-btn" onclick="closeWalletModal()">关闭</button>
+        </div>
+    </div>
+
     <div class="container">
         <!-- 头部 -->
         <header class="header">
@@ -453,31 +689,42 @@
             <div class="card">
                 <h3>税率机制</h3>
                 <div class="tax-info">
-                    <div style="font-size: 1.2rem; margin-bottom: 15px; color: #fec260;">5% 买入 + 5% 卖出</div>
+                    <div style="font-size: 1.25rem; margin-bottom: 18px; color: #fec260; font-weight: 700; text-align: center;">
+                        📊 5% 买入 + 5% 卖出
+                    </div>
                     
-                    <div style="margin-bottom: 20px;">
-                        <div style="font-size: 1.1rem; font-weight: bold; margin-bottom: 10px;">🎲 3% 进入「彩票奖池」</div>
-                        <div style="font-size: 0.95rem; line-height: 1.5; margin-left: 15px;">
-                            每 15 分钟自动开奖一次，<span style="color: #ff6b6b; font-weight: bold;">每次3人瓜分</span>，<br>
-                            奖金根据持币者的购买权重分配。<br>
-                            <span style="color: #4CAF50; font-weight: bold;">买得越多，权重越高，中奖几率越大！</span>
+                    <div style="margin-bottom: 18px; background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%); padding: 16px; border-radius: 12px; border-left: 4px solid #667eea;">
+                        <div style="font-size: 1.05rem; font-weight: bold; margin-bottom: 10px; color: #667eea;">🎲 3% 进入「彩票奖池」</div>
+                        <div style="font-size: 0.92rem; line-height: 1.6; color: #4a5568;">
+                            • 每 15 分钟自动开奖一次<br>
+                            • <span style="color: #ff6b6b; font-weight: 600;">每次 3 人瓜分</span>奖池<br>
+                            • 奖金根据购买权重分配<br>
+                            • <span style="color: #4CAF50; font-weight: 600;">买得越多，权重越高，中奖几率越大</span>
                         </div>
                     </div>
                     
-                    <div style="margin-bottom: 20px;">
-                        <div style="font-size: 1.1rem; font-weight: bold; margin-bottom: 10px;">⏰ 2% 进入「最后买家奖池」</div>
-                        <div style="font-size: 0.95rem; line-height: 1.5; margin-left: 15px;">
-                            若在最后一笔交易后 <span style="color: #ff6b6b; font-weight: bold;">3分钟内</span>无人再买入，<br>
-                            该奖池将<span style="color: #ff6b6b; font-weight: bold;">全额奖励给最后一位买家！</span><br>
-                            若有人继续买入，则奖池继续叠加，<br>
-                            <span style="color: #ff6b6b; font-weight: bold;">没有终点，直到链上寂静的一刻。</span><br>
-                            <span style="color: #e53e3e; font-weight: bold;">🔒 参与最后买家奖池的资格：持仓 ≥ 200U 且持仓时间 ≥ 10分钟，再加仓 200U 以上，即可参与最终奖励池。</span>
+                    <div style="margin-bottom: 18px; background: linear-gradient(135deg, rgba(255, 107, 107, 0.08) 0%, rgba(238, 90, 111, 0.08) 100%); padding: 16px; border-radius: 12px; border-left: 4px solid #ff6b6b;">
+                        <div style="font-size: 1.05rem; font-weight: bold; margin-bottom: 10px; color: #ff6b6b;">⏰ 2% 进入「最后买家奖池」</div>
+                        <div style="font-size: 0.92rem; line-height: 1.6; color: #4a5568; margin-bottom: 12px;">
+                            • 最后交易后 <span style="color: #ff6b6b; font-weight: 600;">3 分钟内</span>无人买入<br>
+                            • 奖池<span style="color: #ff6b6b; font-weight: 600;">全额奖励</span>最后买家<br>
+                            • 有人继续买入则奖池叠加<br>
+                            • <span style="color: #ff6b6b; font-weight: 600;">没有终点，直到链上寂静</span>
+                        </div>
+                        <div style="background: rgba(255, 255, 255, 0.6); padding: 12px; border-radius: 8px; border: 1px solid rgba(255, 107, 107, 0.2);">
+                            <div style="font-size: 0.88rem; font-weight: 600; margin-bottom: 6px; color: #2d3748;">🔒 参与资格要求：</div>
+                            <div style="font-size: 0.85rem; line-height: 1.5; color: #4a5568;">
+                                • 持仓 <span style="color: #e53e3e; font-weight: 600;">≥ 200U</span><br>
+                                • 持仓时间 <span style="color: #e53e3e; font-weight: 600;">≥ 10 分钟</span><br>
+                                • 再加仓 <span style="color: #e53e3e; font-weight: 600;">≥ 200U</span><br>
+                                <span style="color: #667eea; font-weight: 600; font-size: 0.82rem;">→ 即可参与最终奖励池</span>
+                            </div>
                         </div>
                     </div>
                     
-                    <div style="background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(255, 193, 7, 0.1) 100%); padding: 15px; border-radius: 10px; border-left: 4px solid #ff6b6b;">
-                        <div style="font-size: 1rem; font-weight: bold; margin-bottom: 8px; color: #2d3748;">💰 奖励发放</div>
-                        <div style="font-size: 0.9rem; line-height: 1.5; color: #4a5568;">
+                    <div style="background: linear-gradient(135deg, rgba(255, 193, 7, 0.12) 0%, rgba(255, 152, 0, 0.12) 100%); padding: 14px; border-radius: 10px; border-left: 4px solid #ffc107; text-align: center;">
+                        <div style="font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; color: #2d3748;">💰 奖励发放方式</div>
+                        <div style="font-size: 0.88rem; line-height: 1.4; color: #4a5568;">
                             所有奖励均兑换为 <span style="color: #f6ad55; font-weight: bold;">$BNB</span> 发放
                         </div>
                     </div>
@@ -498,6 +745,7 @@
                 <div id="last-buyer-jackpot" class="loading">
                     <div class="jackpot-amount">加载中...</div>
                     <div class="jackpot-details">3分钟倒计时，200u门槛</div>
+                    <div id="last-buyer-countdown" class="countdown-display">⏰ 00:00</div>
                     <div style="font-size: 12px; margin-top: 5px; opacity: 0.9;">奖励：BNB</div>
                 </div>
             </div>
@@ -528,35 +776,37 @@
         <!-- 项目描述 -->
         <section class="description">
             <h3>关于币安大富翁</h3>
-            <p>币安大富翁是一个创新的币安奖池福利项目，融合了彩票机制和生存游戏元素。</p>
+            <p style="margin-bottom: 25px;">币安大富翁是一个创新的币安奖池福利项目，融合了彩票机制和生存游戏元素。</p>
             
             <div style="margin-top: 20px; text-align: left;">
-                <div style="margin-bottom: 20px;">
-                    <strong>🎲 彩票奖池机制：</strong><br>
-                    每 15 分钟自动开奖，<span style="color: #ff6b6b; font-weight: bold;">每次3人瓜分</span>，让持币者紧盯区块，根据购买权重公平分配奖金。
-                </div>
-                
-                <div style="margin-bottom: 20px;">
-                    <strong>⏰ 最后买家奖池：</strong><br>
-                    <span style="color: #ff6b6b; font-weight: bold;">3分钟</span>的倒计时悬念，让买家不敢停下，直到链上寂静的一刻。
-                </div>
-                
-                <div style="background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(255, 193, 7, 0.1) 100%); padding: 20px; border-radius: 12px; border-left: 4px solid #ff6b6b; margin-bottom: 20px;">
-                    <div style="font-weight: bold; margin-bottom: 10px; color: #2d3748;">🏆 最后买家奖池资格要求：</div>
+                <div style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%); padding: 18px; border-radius: 12px; border-left: 4px solid #667eea; margin-bottom: 18px;">
+                    <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 8px; color: #667eea;">🎲 彩票奖池机制</div>
                     <div style="font-size: 0.95rem; line-height: 1.6; color: #4a5568;">
-                        • 无权限限制<br>
-                        • 必须持仓 <span style="color: #e53e3e; font-weight: bold;">200u以上</span><br>
-                        • 持仓时长 <span style="color: #e53e3e; font-weight: bold;">10分钟以上</span><br>
-                        • 然后加仓 <span style="color: #e53e3e; font-weight: bold;">200u</span><br>
-                        • 才可以有抢最后买家奖励池的资格
+                        每 15 分钟自动开奖，<span style="color: #ff6b6b; font-weight: 600;">每次 3 人瓜分</span>，让持币者紧盯区块，根据购买权重公平分配奖金。
                     </div>
                 </div>
                 
-                <div style="text-align: center; font-style: italic; color: #666; margin-top: 20px;">
-                    <strong>这不仅是交易，更是一次链上的生存游戏。</strong>
+                <div style="background: linear-gradient(135deg, rgba(255, 107, 107, 0.08) 0%, rgba(238, 90, 111, 0.08) 100%); padding: 18px; border-radius: 12px; border-left: 4px solid #ff6b6b; margin-bottom: 18px;">
+                    <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 8px; color: #ff6b6b;">⏰ 最后买家奖池</div>
+                    <div style="font-size: 0.95rem; line-height: 1.6; color: #4a5568;">
+                        <span style="color: #ff6b6b; font-weight: 600;">3 分钟</span>的倒计时悬念，让买家不敢停下，直到链上寂静的一刻。
+                    </div>
+                </div>
+                
+                <div style="background: rgba(255, 255, 255, 0.6); padding: 18px; border-radius: 12px; border: 2px solid rgba(255, 107, 107, 0.15); margin-bottom: 18px;">
+                    <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 10px; color: #2d3748;">🔒 最后买家奖池参与资格</div>
+                    <div style="font-size: 0.92rem; line-height: 1.65; color: #4a5568;">
+                        • 持仓 <span style="color: #e53e3e; font-weight: 600;">≥ 200U</span> 且持仓时间 <span style="color: #e53e3e; font-weight: 600;">≥ 10 分钟</span><br>
+                        • 再加仓 <span style="color: #e53e3e; font-weight: 600;">≥ 200U</span><br>
+                        • <span style="color: #667eea; font-weight: 600;">即可参与最终奖励池抽奖</span>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; font-style: italic; color: #666; margin-top: 25px; font-size: 1.05rem;">
+                    <strong>🎮 这不仅是交易，更是一次链上的生存游戏。</strong>
                 </div>
             </div>
-        </div>
+        </section>
     </div>
 
     <!-- JavaScript -->
