@@ -1,6 +1,7 @@
 const LOTTERY_CONTRACT_ADDRESS = '0x9003e40c5780517BbcF58D4D2c67324933fAFBDf'; // 抽奖合约（随机奖励池）
 const FINAL_POOL_CONTRACT_ADDRESS = '0x51B9804Eb4a0BC900b579601b009A0716872c802'; // 最后买家合约（最终奖励池）
 const TOKEN_CONTRACT_ADDRESS = '0x3d2EFA57F8A5B0403a9FBB34C694A44D2bF19862'; // 大富翁 token合约
+const WBNB_CONTRACT_ADDRESS = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'; // WBNB 合约地址
 const CHAIN_EXPLORER = 'https://bscscan.com/address/';
 const BSC_RPC_URL = 'https://bsc-dataseed4.ninicoin.io'; // BSC 主网 RPC
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000001';
@@ -76,6 +77,15 @@ const LOTTERY_ABI = [{
     "type": "function"
 }];
 
+// ERC20 ABI for balanceOf
+const ERC20_ABI = [{
+    "constant": true,
+    "inputs": [{"name": "_owner", "type": "address"}],
+    "name": "balanceOf",
+    "outputs": [{"name": "balance", "type": "uint256"}],
+    "type": "function"
+}];
+
 async function loadLotteryInfo() {
     try {
         // 使用 BSC RPC 节点初始化 Web3
@@ -105,9 +115,7 @@ async function loadLotteryInfo() {
         const lotteryJackpotElement = document.getElementById('lottery-jackpot');
         if (lotteryJackpotElement) {
             lotteryJackpotElement.innerHTML = `<span style="font-size: 28px;font-weight: 900;">${lotteryAmount.toLocaleString('en-US', { maximumFractionDigits: 4, minimumFractionDigits: 4 })} BNB</span><br>
-            <span style="font-size: 12px;">约 $${lotteryUsdValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span><br>
-            <span style="font-size: 14px;">每15分钟开奖，3人瓜分</span><br>
-            <span style="font-size: 12px; margin-top: 5px; opacity: 0.9;">奖励：BNB</span>`;
+            <span style="font-size: 12px;">约 $${lotteryUsdValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>`;
         }
 
         // 获取最终奖励池合约的金额和历史记录
@@ -119,15 +127,22 @@ async function loadLotteryInfo() {
         
         try {
             const finalPoolContract = new web3.eth.Contract(LOTTERY_ABI, FINAL_POOL_CONTRACT_ADDRESS);
-            const finalPoolInfo = await finalPoolContract.methods.getAllInfo(ZERO_ADDRESS).call();
             
-            // 获取奖池金额 (索引6或7)
-            finalPoolAmount = Number(web3.utils.fromWei(finalPoolInfo[0][7] || finalPoolInfo[0][6], 'ether'));
+            // 获取合约中 WBNB 代币的余额
+            const wbnbContract = new web3.eth.Contract(ERC20_ABI, WBNB_CONTRACT_ADDRESS);
+            const wbnbBalance = await wbnbContract.methods.balanceOf(FINAL_POOL_CONTRACT_ADDRESS).call();
+            finalPoolAmount = Number(web3.utils.fromWei(wbnbBalance, 'ether'));
             finalPoolUsdValue = Number((finalPoolAmount * blPrice).toFixed(2));
             
-            // 获取最后买家历史中奖记录
-            lastBuyerWinners = finalPoolInfo[1] || []; // 中奖者地址数组
-            lastBuyerWinningsAmount = finalPoolInfo[2] || []; // 中奖金额数组
+            // 获取历史记录和中奖者信息
+            try {
+                const finalPoolInfo = await finalPoolContract.methods.getAllInfo(ZERO_ADDRESS).call();
+                // 获取最后买家历史中奖记录
+                lastBuyerWinners = finalPoolInfo[1] || []; // 中奖者地址数组
+                lastBuyerWinningsAmount = finalPoolInfo[2] || []; // 中奖金额数组
+            } catch (e) {
+                console.error('获取历史记录失败:', e);
+            }
             
             // 获取当前中奖者
             try {
@@ -203,11 +218,11 @@ async function loadLotteryInfo() {
             let jackpotHTML = `
                 <span style="font-size: 28px;font-weight: 900;">${finalPoolAmount.toLocaleString('en-US', { maximumFractionDigits: 4, minimumFractionDigits: 4 })} BNB</span><br>
                 <span style="font-size: 12px;">约 $${finalPoolUsdValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span><br>
+                <div id="last-buyer-countdown" class="countdown-display" style="margin-top:10px;">⏰ 00:00</div>
             `;
             
             if (lastBuyer !== ZERO_ADDRESS) {
                 jackpotHTML += `
-                    <div id="last-buyer-countdown" class="countdown-display" style="margin-top:10px;">⏰ 00:00</div>
                     <div style="font-size:0.85rem;margin-top:8px;opacity:0.9;">
                         最后买家: <span style="font-family:monospace;">${lastBuyer.slice(0, 6)}...${lastBuyer.slice(-4)}</span>
                     </div>
@@ -240,15 +255,13 @@ async function loadLotteryInfo() {
                         🎁 领取奖励 (drawWinners)
                     </button>
                 `;
-            } else {
-                jackpotHTML += `
-                    <div style="font-size: 14px;margin-top:10px;">3分钟倒计时，200u门槛</div>
-                    <div style="font-size: 12px; margin-top: 5px; opacity: 0.9;">奖励：BNB</div>
-                `;
             }
             
             lastBuyerJackpotElement.innerHTML = jackpotHTML;
         }
+
+        // 启动倒计时（始终启动，即使没有最后买家）
+        startCountdown(countdownEndTime);
 
         // 更新最后买家奖励列表（包含历史记录）
         try {
@@ -312,10 +325,8 @@ async function loadLotteryInfo() {
                 lastBuyerWinnersListElement.innerHTML = lastBuyerHTML;
             }
             
-            // 启动倒计时（如果有最后买家）
-            if (lastBuyer !== ZERO_ADDRESS) {
-                startCountdown(countdownEndTime);
-            }
+            // 启动倒计时（始终启动）
+            startCountdown(countdownEndTime);
             
         } catch (e) {
             console.error('获取最后买家信息失败:', e);
@@ -359,6 +370,13 @@ function startCountdown(countdownEndTime) {
         const now = Math.floor(Date.now() / 1000);
         const timeLeft = countdownEndTime - now;
         
+        // 如果没有倒计时时间或时间为0，显示默认状态
+        if (!countdownEndTime || countdownEndTime === 0) {
+            countdownElement.innerHTML = '⏰ 等待开始...';
+            countdownElement.className = 'countdown-display';
+            return;
+        }
+        
         if (timeLeft <= 0) {
             countdownElement.innerHTML = '⏰ 倒计时结束！';
             countdownElement.className = 'countdown-display danger';
@@ -391,7 +409,7 @@ function startCountdown(countdownEndTime) {
     updateCountdown();
     const countdownInterval = setInterval(updateCountdown, 1000);
     
-    // 存储interval ID以便后续清理
+    // 存傮interval ID以便后续清理
     window.lastBuyerCountdownInterval = countdownInterval;
 }
 
